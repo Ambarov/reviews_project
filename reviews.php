@@ -525,7 +525,7 @@
   }
 ]
 ';
-
+	$reviews = json_decode($json, true);
 
 ?>
 <h2>Filter reviews</h2>
