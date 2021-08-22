@@ -624,29 +624,29 @@
 <form action="reviews.php" method="post">
 	<label for="rating">Order by rating:</label>
 	<select id="rating" name="rating">
-		<option value="high">Highest first</option>
-		<option value ="low">Lowest first</option>
+		<option value="high" <?php echo (isset($_POST['rating']) && $_POST['rating'] == "high") ? 'selected' : ''; ?>>Highest first</option>
+		<option value ="low" <?php echo (isset($_POST['rating']) && $_POST['rating'] == "low") ? 'selected' : ''; ?>>Lowest first</option>
 	</select>
 	<br></br>
 	<label for="minimum">Minimum rating:</label>
 	<select id="minimum" name="minimum">
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
+		<option value="1" <?php echo (isset($_POST['minimum']) && $_POST['minimum'] == "1") ? 'selected' : ''; ?>>1</option>
+		<option value="2" <?php echo (isset($_POST['minimum']) && $_POST['minimum'] == "2") ? 'selected' : ''; ?>>2</option>
+		<option value="3" <?php echo (isset($_POST['minimum']) && $_POST['minimum'] == "3") ? 'selected' : ''; ?>>3</option>
+		<option value="4" <?php echo (isset($_POST['minimum']) && $_POST['minimum'] == "4") ? 'selected' : ''; ?>>4</option>
+		<option value="5" <?php echo (isset($_POST['minimum']) && $_POST['minimum'] == "5") ? 'selected' : ''; ?>>5</option>
 	</select>
 	<br></br>
 	<label for="date">Order by date:</label>
 	<select id="date" name="date">
-		<option value="oldest">Oldest first</option>
-		<option value="newest">Newest first</option>
+		<option value="oldest" <?php echo (isset($_POST['date']) && $_POST['date'] == "oldest") ? 'selected' : ''; ?>>Oldest first</option>
+		<option value="newest" <?php echo (isset($_POST['date']) && $_POST['date'] == "newest") ? 'selected' : ''; ?>>Newest first</option>
 	</select>
 	<br></br>
 	<label for="prioritize">Prioritize by text:</label>
 	<select id="prioritize" name="prioritize">
-		<option value="yes">Yes</option>
-		<option value="no">No</option>
+		<option value="yes" <?php echo (isset($_POST['prioritize']) && $_POST['prioritize'] == "yes") ? 'selected' : ''; ?>>Yes</option>
+		<option value="no" <?php echo (isset($_POST['prioritize']) && $_POST['prioritize'] == "no") ? 'selected' : ''; ?>>No</option>
 	</select>
 	<br></br>
 	<input type="submit" value="Filter">
