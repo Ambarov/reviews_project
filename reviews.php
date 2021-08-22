@@ -527,24 +527,35 @@
 ';
 	if($_SERVER['REQUEST_METHOD']=='POST'){
 		$selectOption = $_POST['rating'];
+		$minimumRating = $_POST['minimum'];
 	}
 	else {
 		$selectOption = 'high';
+		$minimumRating = 'low';
 	}
 	$reviews = json_decode($json, true);
-	
+	$filtered_reviews = array_filter($reviews, function($data){
+		if(!isset($_POST['minimum'])){
+			$value = 1;
+		}
+		else {
+			$value = $_POST['minimum'];
+		}
+		debug_to_console($value);
+		return $data['rating'] >= (int) $value;
+	});
 	
 	if($selectOption === 'high'){
 		function sortByRating($a, $b){
 			return $a['rating'] < $b['rating'];
 		}
-		usort($reviews, 'sortByRating');
+		usort($filtered_reviews, 'sortByRating');
 	}
 	else {
 		function sortByRating($a, $b){
 			return $a['rating'] > $b['rating'];
 		}
-		usort($reviews, 'sortByRating');
+		usort($filtered_reviews, 'sortByRating');
 	}
 	function debug_to_console($data){ //function to help me debug in the console
 		$output = $data;
@@ -594,7 +605,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($reviews as $row) : ?>
+	<?php foreach ($filtered_reviews as $row) : ?>
 	<tr>
 	<td><?= $row['id']; ?></td>
 	<td><?= $row['rating']; ?></td>
