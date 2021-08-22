@@ -529,11 +529,13 @@
 		$selectOption = $_POST['rating'];
 		$minimumRating = $_POST['minimum'];
 		$dateOrder = $_POST['date'];
+		$prioritize = $_POST['prioritize'];
 	}
 	else {
 		$selectOption = 'high';
 		$minimumRating = 'low';
 		$dateOrder = 'oldest';
+		$prioritize = 'yes';
 	}
 	$reviews = json_decode($json, true);
 	$filtered_reviews = array_filter($reviews, function($data){
@@ -564,7 +566,7 @@
 					}
 				}
 				else if ($dateOrder === 'newest') {
-					if (strtotime($a['reviewCreatedOnDate']) < strtotime($b['reviewCreatedOnDate'])) { // oldest first
+					if (strtotime($a['reviewCreatedOnDate']) < strtotime($b['reviewCreatedOnDate'])) { // newest first
 						return 1;
 				}
 			}
@@ -605,6 +607,18 @@
 		echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 	}
 	debug_to_console($selectOption);
+	if($prioritize === 'yes'){
+		$text_filtered_reviews = array_filter($filtered_reviews, function($data){ // function to filter out the reviews without text
+			return !empty($data['reviewText']); // only get the ones where reviewText is not null
+		});
+		$no_text_filtered_reviews = array_filter($filtered_reviews, function($data) {
+			return empty($data['reviewText']);
+		});
+		$merged = array_merge($text_filtered_reviews, $no_text_filtered_reviews); // merge both arrays
+	}
+	else {
+		$merged = $filtered_reviews; // leave the array as is if prioritizeby text is disabled
+	}
 ?>
 <h2>Filter reviews</h2>
 <form action="reviews.php" method="post">
@@ -646,7 +660,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($filtered_reviews as $row) : ?>
+	<?php foreach ($merged as $row) : ?>
 	<tr>
 	<td><?= $row['id']; ?></td>
 	<td><?= $row['rating']; ?></td>
