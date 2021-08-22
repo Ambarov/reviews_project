@@ -525,18 +525,24 @@
   }
 ]
 ';
+	if($_SERVER['REQUEST_METHOD']=='POST'){
+		$selectOption = $_POST['rating'];
+	}
+	else {
+		$selectOption = 'high';
+	}
 	$reviews = json_decode($json, true);
-	$selectOption = $_POST['rating'];
+	
 	
 	if($selectOption === 'high'){
 		function sortByRating($a, $b){
-			return $a['rating'] > $b['rating'];
+			return $a['rating'] < $b['rating'];
 		}
 		usort($reviews, 'sortByRating');
 	}
 	else {
 		function sortByRating($a, $b){
-			return $a['rating'] < $b['rating'];
+			return $a['rating'] > $b['rating'];
 		}
 		usort($reviews, 'sortByRating');
 	}
@@ -549,7 +555,7 @@
 	debug_to_console($selectOption);
 ?>
 <h2>Filter reviews</h2>
-<form>
+<form action="reviews.php" method="post">
 	<label for="rating">Order by rating:</label>
 	<select id="rating" name="rating">
 		<option value="high">Highest first</option>
