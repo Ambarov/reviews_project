@@ -526,7 +526,27 @@
 ]
 ';
 	$reviews = json_decode($json, true);
-
+	$selectOption = $_POST['rating'];
+	
+	if($selectOption === 'high'){
+		function sortByRating($a, $b){
+			return $a['rating'] > $b['rating'];
+		}
+		usort($reviews, 'sortByRating');
+	}
+	else {
+		function sortByRating($a, $b){
+			return $a['rating'] < $b['rating'];
+		}
+		usort($reviews, 'sortByRating');
+	}
+	function debug_to_console($data){ //function to help me debug in the console
+		$output = $data;
+		if (is_array($output))
+			$output = implode(',', $output);
+		echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
+	}
+	debug_to_console($selectOption);
 ?>
 <h2>Filter reviews</h2>
 <form>
@@ -558,6 +578,26 @@
 	</select>
 	<br></br>
 	<input type="submit" value="Filter">
+	<table>
+	<thead>
+	<tr>
+	<th>Name</th>
+	<th>rating</th>
+	<th>date</th>
+	<th>review</th>
+	</tr>
+	</thead>
+	<tbody>
+	<?php foreach ($reviews as $row) : ?>
+	<tr>
+	<td><?= $row['id']; ?></td>
+	<td><?= $row['rating']; ?></td>
+	<td><?= $row['reviewCreatedOnDate']; ?></td>
+	<td><?= $row['reviewText']; ?></td>
+	</tr>
+	<?php endforeach; ?>
+	</tbody>
+	</table>
 </form>
 </body>
 </html>
