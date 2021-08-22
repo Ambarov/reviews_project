@@ -528,10 +528,12 @@
 	if($_SERVER['REQUEST_METHOD']=='POST'){
 		$selectOption = $_POST['rating'];
 		$minimumRating = $_POST['minimum'];
+		$dateOrder = $_POST['date'];
 	}
 	else {
 		$selectOption = 'high';
 		$minimumRating = 'low';
+		$dateOrder = 'oldest';
 	}
 	$reviews = json_decode($json, true);
 	$filtered_reviews = array_filter($reviews, function($data){
@@ -547,13 +549,52 @@
 	
 	if($selectOption === 'high'){
 		function sortByRating($a, $b){
-			return $a['rating'] < $b['rating'];
+			if (!isset($_POST['date'])) {
+				$dateOrder = 'oldest';
+			}
+			else {
+				$dateOrder = $_POST['date'];
+			}
+			debug_to_console($dateOrder);
+			if($a['rating'] == $b['rating']){
+				debug_to_console('Im here');
+				if($dateOrder === 'oldest') {
+					if (strtotime($a['reviewCreatedOnDate']) > strtotime($b['reviewCreatedOnDate'])) { // oldest first
+						return 1;
+					}
+				}
+				else if ($dateOrder === 'newest') {
+					if (strtotime($a['reviewCreatedOnDate']) < strtotime($b['reviewCreatedOnDate'])) { // oldest first
+						return 1;
+				}
+			}
 		}
+		return $a['rating'] < $b['rating'] ? 1 : -1;
+		}
+		
 		usort($filtered_reviews, 'sortByRating');
 	}
 	else {
 		function sortByRating($a, $b){
-			return $a['rating'] > $b['rating'];
+			if (!isset($_POST['date'])) {
+				$dateOrder = 'oldest';
+			}
+			else {
+				$dateOrder = $_POST['date'];
+			}
+			if($a['rating'] == $b['rating']){
+				if($dateOrder === 'oldest') {
+					if (strtotime($a['reviewCreatedOnDate']) > strtotime($b['reviewCreatedOnDate'])) {
+						return 1;
+					}
+				}
+				else if ($dateOrder === 'newest'){
+					if (strtotime($a['reviewCreatedOnDate']) < strtotime($b['reviewCreatedOnDate'])) {
+						return 1;
+				}
+			}
+		}
+		return $a['rating'] > $b['rating'] ? 1 : -1;
 		}
 		usort($filtered_reviews, 'sortByRating');
 	}
